@@ -7,7 +7,13 @@ class UserVisitMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.user and not request.user.is_anonymous:
+        if (
+            request.user and
+            not request.user.is_anonymous and
+            # Do not track Foxes
+            getattr(request.user, 'fox', None) is None
+        ):
+
             visit, created = request.user.uservisit_set.get_or_create(
                 defaults={
                     "last_seen": timezone.now(),

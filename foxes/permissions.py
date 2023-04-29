@@ -5,4 +5,5 @@ class IsAFox(BasePermission):
     """
     Is the current user a fox?
     """
-    pass
+    def has_permission(self, request, view):
+        return getattr(request.user, 'fox', None) is not None

@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
-
-# Create your models here.
+from django.contrib.gis.db.models import PointField
+from django.contrib.gis.geos import Point
 
 
 class RabbitHole(models.Model):
@@ -13,10 +13,20 @@ class RabbitHole(models.Model):
     bunnies_limit = models.PositiveIntegerField(default=5)
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
+    location_point = PointField(null=True, blank=True)
+    # Add point property calculated automatically on save
 
     @property
     def bunny_count(self):
         return self.bunnies.count()
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+
+        if is_new and not self.location_point:
+            self.location_point = Point(self.latitude, self.longitude)
+
+        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.location

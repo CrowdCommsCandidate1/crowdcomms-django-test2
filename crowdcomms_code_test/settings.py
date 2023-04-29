@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'analytics.apps.AnalyticsConfig',
     'foxes.apps.FoxesConfig',
     'rest_framework',
+    'django.contrib.gis',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +81,8 @@ WSGI_APPLICATION = 'crowdcomms_code_test.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        # Update to SpatiaLite to support GeoDjango
+        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
