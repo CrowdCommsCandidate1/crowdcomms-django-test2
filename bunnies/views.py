@@ -13,11 +13,11 @@ class RabbitHoleViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, RabbitHolePermissions)
     queryset = RabbitHole.objects.all()
 
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-
     def filter_queryset(self, queryset):
-        return queryset
+        # Limiting full queryset for superusers to DELETE operations
+        if self.request.user.is_superuser and self.action == "destroy":
+            return queryset
+        return queryset.filter(owner=self.request.user)
 
 
 class BunnyViewSet(viewsets.ModelViewSet):

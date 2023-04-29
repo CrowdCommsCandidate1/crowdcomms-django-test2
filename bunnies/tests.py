@@ -77,6 +77,8 @@ class RabbitHolesTests(APITestCase):
 
         self.client.login(username='bob', password='bob')
 
+        # If we expect this payload to result in a successful API call,
+        # latitude and longitude fields need to be optional, hence the migration
         data = {
             'owner': wrong_user.id,
             'location': 'somewhere',
